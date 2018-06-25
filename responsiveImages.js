@@ -65,17 +65,24 @@ jQuery(function($){
 		}
 
 		this.getImg = function(self, sizes){
+			
 			var src = '';
 			if(sizes[0]){
 				src = sizes[0];
 			}
 
-
+			var last_src = '';
 			for(var i in sizes){
 				if(parseInt(i) > self.window_width){
 					src = sizes[i];
 					break;
-				}
+				} 
+
+				last_src = sizes[i];
+			}
+
+			if(src == ''){
+				src = last_src;
 			}
 
 			return src;
