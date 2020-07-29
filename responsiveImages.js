@@ -20,6 +20,9 @@ jQuery(function($){
 			}
 
 			if(self.isWebP){
+				$('body [' + self.dataImgWebPTag + ']').each(function(){
+					self.countSizes(self, this);
+				});
 				$('body [' + self.dataImgTag + ']').not('body [' + self.dataImgWebPTag + ']').each(function(){
 					self.countSizes(self, this);
 				});
@@ -131,8 +134,9 @@ jQuery(function($){
 
 
 		this.resizeImg = function(self, el){
-			var src = self.getImg(self, JSON.parse($.data(el, 'sizes')));
-
+			var data = $.data(el, 'sizes');
+			if(!data) return;
+			var src = self.getImg(self, JSON.parse(data));
 			var img = new Image();
 			img.src = src;
 			img.onload = function(){
