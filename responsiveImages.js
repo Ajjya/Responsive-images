@@ -5,14 +5,29 @@ jQuery(function($){
 
 	function ResponsiveImages(){
 		this.window_width = 0;
-
+		this.dataImgTag = 'data-img-sizes';
+		this.dataImgWebPTag = 'data-img-sizes-webp';
+		this.isWebP = false;
 
 		this.init = function(){
 			var self = this;
 
-			$('body [data-img-sizes]').each(function(){
-				self.countSizes(self, this);
-			});
+			var isitFirefox = window.navigator.userAgent.match(/Firefox\/([0-9]+)\./);
+			var firefoxVer = isitFirefox ? parseInt(isitFirefox[1]) : 0;
+			
+			if (self.canUseWebp() || firefoxVer >= 65) {
+				self.isWebP = true;
+			}
+
+			if(self.isWebP){
+				$('body [' + self.dataImgTag + ']').not('body [' + self.dataImgWebPTag + ']').each(function(){
+					self.countSizes(self, this);
+				});
+			} else {
+				$('body [' + self.dataImgTag + ']').each(function(){
+					self.countSizes(self, this);
+				});
+			}
 
 			self.resizeWindow(self);
 
@@ -21,15 +36,41 @@ jQuery(function($){
 			})
 		}
 
+		this.canUseWebp = function() {
+			var elem = document.createElement('canvas');
+			if (!!(elem.getContext && elem.getContext('2d'))) {
+				return elem.toDataURL('image/webp').indexOf('data:image/webp') == 0;
+			}
+			return false;
+		}
+
 		this.resizeWindow = function(self){
 			self.window_width = document.body.clientWidth;  
-			$('body [data-img-sizes]').each(function(){
-				self.resizeImg(self, this);
-			})
+			if(self.isWebP){
+				$('body [' + self.dataImgWebPTag + ']').each(function(){
+					self.resizeImg(self, this);
+				});
+
+				$('body [' + self.dataImgTag + ']').not('body [' + self.dataImgWebPTag + ']').each(function(){
+					self.resizeImg(self, this);
+				});
+
+				
+			} else {
+				$('body [' + self.dataImgTag + ']').each(function(){
+					self.resizeImg(self, this);
+				});
+			}
 		}
 
 		this.countSizes = function(self, el){
-			var sizes = $(el).attr('data-img-sizes');
+			var sizes = $(el).attr(self.dataImgTag);
+
+			if(self.isWebP){
+				var webPsizes = $(el).attr(self.dataImgWebPTag);
+				if(webPsizes) sizes = webPsizes;
+			}
+
 			sizes = self.getSizes(sizes);
 			if(sizes){
 				$.data(el, 'sizes', JSON.stringify(sizes));
