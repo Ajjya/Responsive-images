@@ -13,6 +13,13 @@ Before your closing <body> tag add:
 ```html
 <script type="text/javascript" src="path-to-library/responsiveImages.js"></script>
 ```
+Or by npm/yarn
+```html
+  yarn add ajjya-responsive-images
+  OR
+  npm install ajjya-responsive-images
+```
+  
 ### Usage
 Add attribute data-img-sizes to every image or tag with background image which needs to be responsive (Change size according to window width). The biggest image have to be without size, all others paths have sizes (image width).
 Sizes are separated with comma, image path and size are separated with space.
