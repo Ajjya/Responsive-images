@@ -3,12 +3,11 @@
 
 ## Getting started
 
-### Quick start
+### Installation
 * [Download the latest release](https://github.com/Ajjya/Responsive-images/archive/master.zip)
 * Clone the repository: git clone [Clone](https://github.com/Ajjya/Responsive-images.git)
 * Install: bower install Responsive-images
 
-### Installation
 Before your closing <body> tag add:
 ```html
 <script type="text/javascript" src="path-to-library/responsiveImages.js"></script>
@@ -18,6 +17,10 @@ Or by npm/yarn
   yarn add ajjya-responsive-images
   OR
   npm install ajjya-responsive-images
+```
+Then you can import:
+```
+  import 'ajjya-responsive-images';
 ```
   
 ### Usage
