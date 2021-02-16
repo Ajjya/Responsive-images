@@ -1,4 +1,4 @@
-jQuery(function($){
+document.addEventListener('DOMContentLoaded', function () {
 
 	var ra = new ResponsiveImages();
 	ra.init();
@@ -20,23 +20,23 @@ jQuery(function($){
 			}
 
 			if(self.isWebP){
-				$('body [' + self.dataImgWebPTag + ']').each(function(){
-					self.countSizes(self, this);
+				document.querySelectorAll('body [' + self.dataImgWebPTag + ']').forEach(function(item){
+					self.countSizes(self, item);
 				});
-				$('body [' + self.dataImgTag + ']').not('body [' + self.dataImgWebPTag + ']').each(function(){
-					self.countSizes(self, this);
+				document.querySelectorAll('body [' + self.dataImgTag + ']:not([' + self.dataImgWebPTag + '])').forEach(function(item){
+					self.countSizes(self, item);
 				});
 			} else {
-				$('body [' + self.dataImgTag + ']').each(function(){
-					self.countSizes(self, this);
+				document.querySelectorAll('body [' + self.dataImgTag + ']').forEach(function(item){
+					self.countSizes(self, item);
 				});
 			}
 
 			self.resizeWindow(self);
 
-			$(window).on('resize', function(){
+			window.onresize = function(event){
 				self.resizeWindow(self);
-			})
+			}
 		}
 
 		this.canUseWebp = function() {
@@ -50,35 +50,33 @@ jQuery(function($){
 		this.resizeWindow = function(self){
 			self.window_width = document.body.clientWidth;  
 			if(self.isWebP){
-				$('body [' + self.dataImgWebPTag + ']').each(function(){
-					self.resizeImg(self, this);
+				document.querySelectorAll('body [' + self.dataImgWebPTag + ']').forEach(function(item){
+					self.resizeImg(self, item);
 				});
 
-				$('body [' + self.dataImgTag + ']').not('body [' + self.dataImgWebPTag + ']').each(function(){
-					self.resizeImg(self, this);
+				document.querySelectorAll('body [' + self.dataImgTag + ']:not([' + self.dataImgWebPTag + '])').forEach(function(item){
+					self.resizeImg(self, item);
 				});
-
 				
 			} else {
-				$('body [' + self.dataImgTag + ']').each(function(){
-					self.resizeImg(self, this);
+				document.querySelectorAll('body [' + self.dataImgTag + ']').forEach(function(item){
+					self.resizeImg(self, item);
 				});
 			}
 		}
 
 		this.countSizes = function(self, el){
-			var sizes = $(el).attr(self.dataImgTag);
+			var sizes = el.getAttribute(self.dataImgTag);
 
 			if(self.isWebP){
-				var webPsizes = $(el).attr(self.dataImgWebPTag);
+				var webPsizes = el.getAttribute(self.dataImgWebPTag);
 				if(webPsizes) sizes = webPsizes;
 			}
 
 			sizes = self.getSizes(sizes);
 			if(sizes){
-				$.data(el, 'sizes', JSON.stringify(sizes));
+				el.dataset.sizes = JSON.stringify(sizes);
 			}
-			
 		}
 
 		this.getSizes = function(sizes){
@@ -132,22 +130,19 @@ jQuery(function($){
 			return src;
 		}
 
-
 		this.resizeImg = function(self, el){
-			var data = $.data(el, 'sizes');
+			var data = el.dataset.sizes;
 			if(!data) return;
 			var src = self.getImg(self, JSON.parse(data));
 			var img = new Image();
 			img.src = src;
 			img.onload = function(){
-				if($(el).tagName == 'IMG'){
-					$(el).attr('src', src);
+				if(el.tagName == 'IMG'){
+					el.setAttribute('src', src);
 				} else {
-					$(el).css('backgroundImage', 'url(' + src + ')');
+					el.style.backgroundImage = 'url(' + src + ')';
 				}
 			}
 		}
-
-
 	}
 })
